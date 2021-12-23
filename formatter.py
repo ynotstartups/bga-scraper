@@ -13,7 +13,7 @@ COMPLEXITY = "complexity"
 game_name_set = set()
 
 game_data = []
-with open("final_result.txt") as f:
+with open("final_result_premium.txt") as f:
     counter = 0
     for line in f:
         counter += 1
@@ -34,7 +34,7 @@ with open("final_result.txt") as f:
                 game_name_set.add(game_name)
 
         elif counter == 2: # is_premium=True
-            is_premium = True if line.split("=")[1] == "True" else False
+            is_premium = True if line.split("=")[1].strip() == "True" else False
 
         elif counter == 3: # number_of_players=' 2 - 4 '
             number_of_players = line.split("=")[1].strip().replace("'", "").split("-")
@@ -79,7 +79,7 @@ with open("final_result.txt") as f:
             assert False
 
 with open("output-premium.csv", "w") as csvfile:
-    fieldnames = [NAME, URL, FROM_PLAYER, TO_PLAYER, DURATION, COMPLEXITY]
+    fieldnames = [NAME, URL, IS_PREMIUM, FROM_PLAYER, TO_PLAYER, DURATION, COMPLEXITY]
 
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
