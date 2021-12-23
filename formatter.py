@@ -2,6 +2,7 @@
 import csv
 
 NAME = "name"
+IS_PREMIUM = "is_premium"
 URL = "url"
 FROM_PLAYER = "from #player"
 TO_PLAYER = "to #player"
@@ -26,12 +27,16 @@ with open("final_result.txt") as f:
                 next(f)
                 next(f)
                 next(f)
+                next(f)
                 counter = 0
                 continue
             else:
                 game_name_set.add(game_name)
 
-        elif counter == 2: # number_of_players=' 2 - 4 '
+        elif counter == 2: # is_premium=True
+            is_premium = True if line.split("=")[1] == "True" else False
+
+        elif counter == 3: # number_of_players=' 2 - 4 '
             number_of_players = line.split("=")[1].strip().replace("'", "").split("-")
             if len(number_of_players) == 2:
                 number_of_players_from, number_of_players_to = number_of_players
@@ -49,12 +54,12 @@ with open("final_result.txt") as f:
 
             number_of_players_from = int(number_of_players_from)
             number_of_players_to = int(number_of_players_to)
-        elif counter == 3: # average_duration='\xa0 11 mn '
+        elif counter == 4: # average_duration='\xa0 11 mn '
             duration_in_minutes = line.strip().split(" ")[1]
 
             # make sure the duration is always in minutes
             assert line.strip().split(" ")[2] == "mn"
-        elif counter == 4: # complexity='Complexity: 3 / 5'
+        elif counter == 5: # complexity='Complexity: 3 / 5'
             complexity = line.strip().split(" ")[1]
 
             # reset counter
@@ -62,6 +67,7 @@ with open("final_result.txt") as f:
             game_data.append(
                 {
                     NAME: game_name,
+                    IS_PREMIUM: is_premium,
                     URL: game_url,
                     FROM_PLAYER: number_of_players_from,
                     TO_PLAYER: number_of_players_to,
@@ -72,7 +78,7 @@ with open("final_result.txt") as f:
         else:
             assert False
 
-with open("output.csv", "w") as csvfile:
+with open("output-premium.csv", "w") as csvfile:
     fieldnames = [NAME, URL, FROM_PLAYER, TO_PLAYER, DURATION, COMPLEXITY]
 
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)

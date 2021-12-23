@@ -19,6 +19,8 @@ for game in all_games_soup.find_all("a", class_="gamelist_link_to_game"):
     game_page = requests.get(game_url)
     game_soup = BeautifulSoup(game_page.text, 'html.parser')
 
+    is_premium = bool(game_soup.find(id="game_emblempremium", style=lambda value: value and 'display:inline-block' in value))
+
     game_text = game_soup.find("div", class_="icon16_nbrplayer").parent.find_all(text=True)
 
     number_of_players = game_text[2]
@@ -26,6 +28,7 @@ for game in all_games_soup.find_all("a", class_="gamelist_link_to_game"):
     complexity = game_text[6]
 
     print(f"{game_href=}")
+    print(f"{is_premium=}")
     print(f"{number_of_players=}")
     print(f"{average_duration=}")
     print(f"{complexity=}")
